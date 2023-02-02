@@ -26,13 +26,16 @@ class UserDetail(APIView):
     def get_object(self, pk):
         try:
             return User.objects.get(pk=pk)
-        except User.DoesNotExist:
+        except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, pk, format=None):
-        user = self.get_object(pk)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+        try:
+            user = self.get_object(pk)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk, format=None):
         user = self.get_object(pk)
