@@ -11,10 +11,21 @@ class User(models.Model):
 
 
 class Location(models.Model):
-    #id = models.IntegerField(primary_key=True)
     name = models.TextField()
     review = models.TextField()
     type = models.TextField()
+
+    class Meta:
+        ordering = ['id']
+
+
+class Establishment(models.Model):
+    name = models.TextField()
+    review = models.FloatField()
+    type = models.TextField()
+    about = models.TextField()
+    phone = models.TextField()
+    address = models.TextField()
 
     class Meta:
         ordering = ['id']
