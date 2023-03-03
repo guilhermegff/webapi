@@ -5,16 +5,18 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
+from .models import Location
 from .serializers import UserSerializer
+from .serializers import LocationSerializer
 
 
 class UserList(APIView):
-    def get(self, request, format=None):
+    def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -29,7 +31,7 @@ class UserDetail(APIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk):
         try:
             user = self.get_object(pk)
             serializer = UserSerializer(user)
@@ -37,7 +39,7 @@ class UserDetail(APIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, pk, format=None):
+    def put(self, request, pk):
         user = self.get_object(pk)
         serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
@@ -45,7 +47,21 @@ class UserDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LocationList(APIView):
+    def get(self, request):
+        locations = Location.objects.all()
+        serializer = LocationSerializer(locations, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
